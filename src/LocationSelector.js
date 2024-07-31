@@ -1,4 +1,3 @@
-// src/LocationSelector.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -12,14 +11,20 @@ const LocationSelector = () => {
 
   useEffect(() => {
     axios.get('https://crio-location-selector.onrender.com/countries')
-      .then(response => setCountries(response.data))
+      .then(response => {
+        setCountries(response.data);
+        console.log('Countries:', response.data);
+      })
       .catch(error => console.error('Error fetching countries:', error));
   }, []);
 
   useEffect(() => {
     if (selectedCountry) {
       axios.get(`https://crio-location-selector.onrender.com/country=${selectedCountry}/states`)
-        .then(response => setStates(response.data))
+        .then(response => {
+          setStates(response.data);
+          console.log('States:', response.data);
+        })
         .catch(error => console.error('Error fetching states:', error));
     } else {
       setStates([]);
@@ -30,7 +35,10 @@ const LocationSelector = () => {
   useEffect(() => {
     if (selectedState) {
       axios.get(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`)
-        .then(response => setCities(response.data))
+        .then(response => {
+          setCities(response.data);
+          console.log('Cities:', response.data);
+        })
         .catch(error => console.error('Error fetching cities:', error));
     } else {
       setCities([]);
@@ -74,7 +82,7 @@ const LocationSelector = () => {
         ))}
       </select>
       {selectedCity && selectedState && selectedCountry && (
-        <p>You Selected {selectedCity}, {selectedState}, {selectedCountry}</p>
+        <p>You selected {selectedCity}, {selectedState}, {selectedCountry}</p>
       )}
     </div>
   );
