@@ -8,14 +8,18 @@ const LocationSelector = () => {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     axios.get('https://crio-location-selector.onrender.com/countries')
       .then(response => {
         setCountries(response.data);
-        console.log('Countries:', response.data); // Log the response
+        setError(''); // Clear any previous errors
       })
-      .catch(error => console.error('Error fetching countries:', error));
+      .catch(error => {
+        console.error('Error fetching countries:', error);
+        setError('Error fetching countries');
+      });
   }, []);
 
   useEffect(() => {
@@ -23,9 +27,12 @@ const LocationSelector = () => {
       axios.get(`https://crio-location-selector.onrender.com/country=${selectedCountry}/states`)
         .then(response => {
           setStates(response.data);
-          console.log('States:', response.data); // Log the response
+          setError(''); // Clear any previous errors
         })
-        .catch(error => console.error('Error fetching states:', error));
+        .catch(error => {
+          console.error('Error fetching states:', error);
+          setError('Error fetching states');
+        });
     } else {
       setStates([]);
       setCities([]);
@@ -37,9 +44,12 @@ const LocationSelector = () => {
       axios.get(`https://crio-location-selector.onrender.com/country=${selectedCountry}/state=${selectedState}/cities`)
         .then(response => {
           setCities(response.data);
-          console.log('Cities:', response.data); // Log the response
+          setError(''); // Clear any previous errors
         })
-        .catch(error => console.error('Error fetching cities:', error));
+        .catch(error => {
+          console.error('Error fetching cities:', error);
+          setError('Error fetching cities');
+        });
     } else {
       setCities([]);
     }
@@ -63,6 +73,7 @@ const LocationSelector = () => {
   return (
     <div>
       <h2>Select Location</h2>
+      {error && <p>{error}</p>}
       <select value={selectedCountry} onChange={handleCountryChange}>
         <option value="">Select Country</option>
         {countries.map(country => (
